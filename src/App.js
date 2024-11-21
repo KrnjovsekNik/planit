@@ -12,6 +12,7 @@ import Statistika from './pages/Statistika';
 import MojiProjekti from './pages/MojiProjekti';
 import Prijatelji from './pages/Prijatelji';
 import MojeNaloge from './pages/MojeNaloge';
+import NovProjekt from './pages/NovProjekt';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/moji-projekti" element={<MojiProjekti />} />
             <Route path="/moje-naloge" element={<MojeNaloge />} />
             <Route path="/prijatelji" element={<Prijatelji />} />
+            <Route path="/new-project" element={<NovProjekt />} />
           </Routes>
         </div>
       </div>
