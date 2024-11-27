@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { IoIosAddCircleOutline } from "react-icons/io";
 import ChatPage from './ChatPage';
 import AddFriendModal from './AddFriendModal';
-
+import { FiPlus } from 'react-icons/fi';
 const Prijatelji = () => {
     const [name, setName] = React.useState('Martin Kobal');
     const [isModalOpen, setModalOpen] = useState(false)
@@ -14,8 +13,9 @@ const Prijatelji = () => {
                 <div className="p-4 border-b">
                     <div className="flex justify-between items-center">
                         <h2 className="text-lg font-semibold text-gray-700">Prijatelji</h2>
-                        <button className="text-gray-500 hover:text-gray-700 hover:font-extrabold">
-                            <IoIosAddCircleOutline size={25} onClick={() => setModalOpen(true)} />
+                        <button onClick={() => setModalOpen(true)} className="flex text-md hover:bg-gray-300 items-center space-x-2 px-1 py-1 pr-2 bg-gray-200 border border-gray-600 text-gray-700 rounded-sm shadow-sm">
+                            <FiPlus className="text-md" />
+                            <span className='text-md'>Dodaj prijatelja</span>
                         </button>
                     </div>
                 </div>

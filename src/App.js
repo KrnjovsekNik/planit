@@ -12,7 +12,8 @@ import Statistika from './pages/Statistika';
 import MojiProjekti from './pages/MojiProjekti';
 import Prijatelji from './pages/Prijatelji';
 import MojeNaloge from './pages/MojeNaloge';
-import NovProjekt from './pages/NovProjekt';
+import NovProjekt from './pages/NovProjektModal';
+import Koledar from './pages/Koledar';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/moje-naloge" element={<MojeNaloge />} />
             <Route path="/prijatelji" element={<Prijatelji />} />
             <Route path="/new-project" element={<NovProjekt />} />
+            <Route path="/koledar" element={<Koledar />} />
           </Routes>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { AiOutlineHome, AiOutlineLogin, AiOutlineUser, AiOutlineMessage } from '
 import { BsGraphUp, BsClipboardCheck } from 'react-icons/bs';
 import { MdOutlineTaskAlt } from 'react-icons/md';
 import { FaUserFriends } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 let routes = [
     {
       label: "Home",     // Name of the navigation item
@@ -28,12 +29,6 @@ let routes = [
       icon: <AiOutlineMessage />
     },
     {
-      label: "Profile",
-      path: "/profile",
-      requiresAuth: true,
-      icon: <AiOutlineUser />
-    },
-    {
       label: "Statistika",
       path: "/statistika",
       requiresAuth: true,
@@ -57,6 +52,12 @@ let routes = [
      requiresAuth: true,
      icon: <FaUserFriends />
     },
+    {
+      label: "Koledar",
+      path: "/koledar",
+      requiresAuth: true,
+      icon: <FaCalendarAlt />
+     },
   ];
 
 export default routes;

@@ -1,8 +1,29 @@
 import React from "react";
-import { Line, Bar, Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Tooltip, Legend } from "chart.js";
+import { Line, Bar, Doughnut, Radar, PolarArea, Pie, Bubble, Scatter } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  RadialLinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  RadialLinearScale,
+  Tooltip,
+  Legend
+);
 
 function Statistika() {
   const lineChartData = {
@@ -11,94 +32,144 @@ function Statistika() {
       {
         label: "Obisk spletne strani",
         data: [65, 59, 80, 81, 56, 55],
-        borderColor: "#007BFF",
-        backgroundColor: "rgba(0, 123, 255, 0.2)",
+        borderColor: "#FF5733", // Živo oranžna
+        backgroundColor: "rgba(255, 87, 51, 0.2)", // Prosojna oranžna
         tension: 0.4,
       },
     ],
   };
-
+  
   const barChartData = {
     labels: ["Pon", "Tor", "Sre", "Čet", "Pet", "Sob", "Ned"],
     datasets: [
       {
         label: "Prodaja",
         data: [12, 19, 3, 5, 2, 3, 9],
-        backgroundColor: "#28A745",
+        backgroundColor: "#FFC300", // Živo rumena
       },
     ],
   };
-
+  
   const doughnutChartData = {
     labels: ["Izdelki A", "Izdelki B", "Izdelki C"],
     datasets: [
       {
         label: "Prodajni deleži",
         data: [300, 50, 100],
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        backgroundColor: ["#DAF7A6", "#FF5733", "#C70039"], // Živo zelena, oranžna, rdeča
       },
     ],
   };
+  
+  const radarChartData = {
+    labels: ["Kakovost", "Cena", "Dostopnost", "Podpora", "Funkcije"],
+    datasets: [
+      {
+        label: "Ocene",
+        data: [4, 3, 5, 4, 4],
+        backgroundColor: "rgba(0, 123, 255, 0.5)", // Svetlo modra
+        borderColor: "#007BFF", // Živo modra
+        borderWidth: 1,
+      },
+    ],
+  };
+  
+  const polarAreaChartData = {
+    labels: ["Se ni zacelo", "V teku", "Koncano"],
+    datasets: [
+      {
+        label: "Stanje",
+        data: [200, 150, 100],
+        backgroundColor: ["#FF5733", "#C70039", "#900C3F"], // Rdeči odtenki
+      },
+    ],
+  };
+  
+  const pieChartData = {
+    labels: ["Storitev 1", "Storitev 2", "Storitev 3"],
+    datasets: [
+      {
+        label: "Delež storitev",
+        data: [50, 30, 20],
+        backgroundColor: ["#FF5733", "#FFC300", "#DAF7A6"], // Žive barve
+      },
+    ],
+  };
+  
+  const bubbleChartData = {
+    datasets: [
+      {
+        label: "Uporabniki",
+        data: [{ x: 10, y: 20, r: 15 }, { x: 15, y: 10, r: 10 }, { x: 20, y: 30, r: 20 }],
+        backgroundColor: "#FFC300", // Živo rumena
+      },
+    ],
+  };
+  
+  const scatterChartData = {
+    datasets: [
+      {
+        label: "Različni podatki",
+        data: [
+          { x: -10, y: 0 },
+          { x: 0, y: 10 },
+          { x: 10, y: 5 },
+          { x: 15, y: -5 },
+        ],
+        backgroundColor: "#C70039", // Živo rdeča
+      },
+    ],
+  }; 
 
+  
   return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>Statistika</h1>
-      <div style={styles.grid}>
-        {/* Linijski graf */}
-        <div style={styles.chartContainer}>
-          <h2 style={styles.chartTitle}>Opravljene naloge po mescih</h2>
+    <div>
+      <div className="p-4 bg-white border-b shadow-sm sticky top-0 z-10">
+          <h2 className='text-lg font-semibold text-gray-700'>Statistika</h2>
+      </div>
+    <div className="bg-gray-100 min-h-screen p-10">
+      <div className="grid grid-cols-3 gap-6">
+        {/* Levi graf čez dve vrstici */}
+        <div className="row-span-2 col-span-1 bg-white p-4 rounded-lg shadow-lg h-[820px] flex flex-col justify-center">
+          <h2 className="text-lg font-bold text-gray-600 text-center mb-4">Obisk spletne strani</h2>
           <Line data={lineChartData} options={{ responsive: true, maintainAspectRatio: false }} />
         </div>
-        {/* Stolpični graf */}
-        <div style={styles.chartContainer}>
-          <h2 style={styles.chartTitle}>Opravljene naloge po dnevih</h2>
+        {/* Desni grafi (prva vrstica) */}
+        <div className="col-span-1 bg-white p-4 rounded-lg shadow-lg h-[400px] flex flex-col justify-center">
+          <h2 className="text-lg font-bold text-gray-600 text-center mb-4">Prodaja</h2>
           <Bar data={barChartData} options={{ responsive: true, maintainAspectRatio: false }} />
         </div>
-        {/* Krožni graf */}
-        <div style={styles.chartContainer}>
-          <h2 style={styles.chartTitle}>Delež nalog v projektu</h2>
+        <div className="col-span-1 bg-white p-4 rounded-lg shadow-lg h-[400px] flex flex-col justify-center">
+          <h2 className="text-lg font-bold text-gray-600 text-center mb-4">Prodajni deleži</h2>
           <Doughnut data={doughnutChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+        </div>
+        {/* Desni grafi (druga vrstica) */}
+        <div className="col-span-1 bg-white p-4 rounded-lg shadow-lg h-[400px] flex flex-col justify-center">
+          <h2 className="text-lg font-bold text-gray-600 text-center mb-4">Ocene izdelkov</h2>
+          <Radar data={radarChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+        </div>
+        <div className="col-span-1 bg-white p-4 rounded-lg shadow-lg h-[400px] flex flex-col justify-center">
+          <h2 className="text-lg font-bold text-gray-600 text-center mb-4">Stanje nalog</h2>
+          <PolarArea data={polarAreaChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+        </div>
+        {/* Zadnji grafi */}
+        <div className="col-span-1 bg-white p-4 rounded-lg shadow-lg h-[400px] flex flex-col justify-center">
+          <h2 className="text-lg font-bold text-gray-600 text-center mb-4">Delež storitev</h2>
+          <Pie data={pieChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+        </div>
+        <div className="col-span-1 bg-white p-4 rounded-lg shadow-lg h-[400px] flex flex-col justify-center">
+          <h2 className="text-lg font-bold text-gray-600 text-center mb-4">Uporabniki</h2>
+          <Bubble data={bubbleChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+        </div>
+        <div className="col-span-1 bg-white p-4 rounded-lg shadow-lg h-[400px] flex flex-col justify-center">
+          <h2 className="text-lg font-bold text-gray-600 text-center mb-4">Različni podatki</h2>
+          <Scatter data={scatterChartData} options={{ responsive: true, maintainAspectRatio: false }} />
         </div>
       </div>
     </div>
+
+    </div>
   );
 }
-
-const styles = {
-  container: {
-    padding: "20px",
-    backgroundColor: "#f8f9fa",
-    minHeight: "100vh",
-  },
-  heading: {
-    textAlign: "center",
-    fontSize: "32px",
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: "20px",
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-    gap: "20px",
-  },
-  chartContainer: {
-    backgroundColor: "white",
-    padding: "20px",
-    borderRadius: "10px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    height: "400px", // Za ohranjanje razmerja grafov
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  chartTitle: {
-    fontSize: "18px",
-    fontWeight: "bold",
-    color: "#555",
-    marginBottom: "10px",
-    textAlign: "center",
-  },
-};
 
 export default Statistika;
