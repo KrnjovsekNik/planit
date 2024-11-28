@@ -1,4 +1,4 @@
-import { AiOutlineHome, AiOutlineLogin, AiOutlineUser, AiOutlineMessage } from 'react-icons/ai';
+import { AiOutlineHome, AiOutlineMessage } from 'react-icons/ai';
 import { BsGraphUp, BsClipboardCheck } from 'react-icons/bs';
 import { MdOutlineTaskAlt } from 'react-icons/md';
 import { FaUserFriends } from "react-icons/fa";
@@ -9,18 +9,6 @@ let routes = [
       path: "/",         // Corresponding route
       requiresAuth: false, // Whether authentication is required
       icon: <AiOutlineHome /> 
-    },
-    {
-      label: "Login",
-      path: "/login",
-      requiresAuth: false,
-      icon: <AiOutlineLogin />
-    },
-    {
-      label: "Register",
-      path: "/register",
-      requiresAuth: false,
-      icon: <AiOutlineUser />
     },
     {
       label: "Chat",

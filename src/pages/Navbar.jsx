@@ -1,10 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CiLogout } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
+import Odjava from './Odjava';
+import { useUser } from '@clerk/clerk-react'
 
 const Navbar = () => {
-  let ime = "Martin Kobal";
+
+  const {isSignedIn, user, isLoaded} = useUser()
+  let ime = "";
+  if(isSignedIn){
+    ime = user.fullName;
+  }
+  console.log(ime + " hahahah");
 
   return (
     <div className="fixed top-0 left-0 right-0 z-40 bg-gray-100 text-white border-r border-gray-300">
@@ -24,12 +31,7 @@ const Navbar = () => {
             </div>
             <FaRegUser />
           </Link>
-          <Link
-            to="./odjava"
-            className="h-[45px] w-10 bg-gray-100 hover:bg-gray-200 text-black flex items-center justify-center border-l border-gray-300"
-          >
-            <CiLogout />
-          </Link>
+          <Odjava/>
         </div>
       </div>
     </div>
