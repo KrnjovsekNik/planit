@@ -9,7 +9,27 @@ export const dodajUserja = async (user) => {
 };
 
 // Pridobi vse projekte
-export const pridobiUserja = async () => {
-  const response = await axios.get(API_URL);
+export const pridobiUserja = async (name) => {
+  const response = await axios.get(API_URL, {
+    params : {
+      name
+    }
+  });
+  console.log(response.data)
   return response.data;
+};
+
+
+export const dodajPrijatelja = async (username, friend) => {
+  try {
+    const response = await axios.post('http://localhost:5000/api/addFriend', {
+      username,
+      friend,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Napaka pri dodajanju prijatelja."
+    );
+  }
 };

@@ -2,16 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegUser } from "react-icons/fa";
 import Odjava from './Odjava';
-import { useUser } from '@clerk/clerk-react'
 
 const Navbar = () => {
 
-  const {isSignedIn, user, isLoaded} = useUser()
-  let ime = "";
-  if(isSignedIn){
-    ime = user.fullName;
-  }
-  console.log(ime + " hahahah");
+  const ime = 'martin'
 
   return (
     <div className="fixed top-0 left-0 right-0 z-40 bg-gray-100 text-white border-r border-gray-300">
