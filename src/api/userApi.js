@@ -4,12 +4,12 @@ const API_URL = 'http://localhost:5000/api/users';
 
 // Dodaj projekt
 export const dodajUserja = async (user) => {
-  const response = await axios.post(API_URL, user);
+  const response = await axios.post(API_URL + "/register", user);
   return response.data;
 };
 
 // Pridobi vse projekte
-export const pridobiUserja = async () => {
-  const response = await axios.get(API_URL);
+export const pridobiUserja = async (user) => {
+  const response = await axios.post(API_URL + "/login", user);
   return response.data;
 };
