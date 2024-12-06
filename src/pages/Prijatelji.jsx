@@ -68,7 +68,7 @@ const Prijatelji = () => {
             </div>
 
             {/* Chat Area */}
-            <div className="flex-1 flex flex-col ml-[280px]">
+            <div className="flex-1 flex py-[5px] flex-col ml-[280px]">
                 <ChatPage name={prijatelj} />
             </div>
 

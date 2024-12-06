@@ -18,3 +18,8 @@ export const pridobiProjekt = async (id) => {
   const response = await axios.get(`${API_URL}/${id}`);
   return response.data;
 };
+
+export const dodajVprojekt = async (ime, id) => {
+  const response = await axios.put(`${API_URL}/dodaj/${ime}/${id}`);
+  return response.data;
+};

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { pridobiGroupChat, dodajGroupChat } from '../api/groupChatApi';
+import { useRef } from 'react';
 
 const GroupChatPage = ({ id_skupine, groupname }) => {
 
@@ -37,6 +38,15 @@ const GroupChatPage = ({ id_skupine, groupname }) => {
         fetchData();
     }, [id_skupine, novCh]);
 
+    const EndRef = useRef(null);
+
+    //tu te da na zacetek, pazi na to, da se to zgodi usakic, ko se messages updejta (setMessages)...
+    useEffect(() => {
+        if (EndRef.current) {
+            EndRef.current.scrollTop = EndRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     return (
         <div className="flex flex-col h-full">
 
@@ -44,8 +54,8 @@ const GroupChatPage = ({ id_skupine, groupname }) => {
                 <h2 className="text-lg font-semibold text-gray-700">{groupname}</h2>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 bg-gray-50 relative">
-                <div className="space-y-4">
+            <div ref={EndRef} className="flex-1 overflow-y-auto p-4 bg-gray-50 relative">
+                <div className="space-y-4  mb-[30px]">
                     {messages.map((msg, index) => (
                         <div
                             key={index}
@@ -83,7 +93,7 @@ const GroupChatPage = ({ id_skupine, groupname }) => {
                             )}
                         </div>
                     ))}
-                </div>
+                </div> 
             </div>
 
             <div className="p-4 bg-white border-t sticky bottom-0 z-10">

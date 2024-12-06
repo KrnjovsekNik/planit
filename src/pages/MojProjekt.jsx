@@ -1,18 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { pridobiProjekt } from "../api/projectApi";
+import { dodajVprojekt, pridobiProjekt } from "../api/projectApi";
 import { FaClock, FaInfo, FaRunning, FaTrash } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 import { pridobiProjektneNaloge } from "../api/nalogeApi";
 import { MdOutlineDoneOutline, MdOutlinePending } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
+import DodajUserjeModal from "./DodajUserjeModal";
+import { pridobiUserja } from "../api/userApi";
 
 function MojProjekt() {
+    const username = 'martin'
+    const [modalOpen, setModalOpen] = useState(false);
+    const [dodanoP, setDodanoP] = useState(0)
+
+    const handleCloseModal = () => {
+        setModalOpen(false)
+        setDodanoP(dodanoP + 1)
+    }
+
+    const [prijatelji, setPrijatelji] = useState(null)
+    
+
     const { id } = useParams()
     const navigate = useNavigate()
 
-const [projekt, setProjekt] = useState();
+    const [projekt, setProjekt] = useState();
 
     const [naloge, setNaloge] = useState([])
     
@@ -40,16 +54,67 @@ const [projekt, setProjekt] = useState();
             console.log(error.message);
         }
     };
-
     useEffect(() => {
         fetchData();
     }, []);
 
     useEffect(() => {
         fetchData2()
+    }, [projekt, prijatelji])
+
+    useEffect(() => {
+        fetchData()
+    }, [dodanoP])
+
+    const [izbraniPrijatelji, setIzbraniPrijatelji] = useState([])
+  
+    const odstraniPrijatelja = (fr) => {
+      setPrijatelji((prev) => [...prev, fr]);
+      setIzbraniPrijatelji((prev) =>prev.filter((prijatelj) => prijatelj !== fr));
+    }
+  
+    const izberiPrijatelja = (fr) => {
+      setIzbraniPrijatelji((prev) => [...prev, fr])
+      setPrijatelji((prev) =>prev.filter((prijatelj) => prijatelj !== fr));
+    }
+  
+    const seznamPrijateljev = async () => {
+        try {
+          const data = await pridobiUserja(username);
+          const prijateljiSeznam = data[0].prijatelji;
+          const filtriraniPrijatelji = prijateljiSeznam.filter(
+            (prijatelj) => !projekt?.udelezenci.includes(prijatelj)
+          );
+      
+          setPrijatelji(filtriraniPrijatelji);
+        } catch (error) {
+          console.log('Napaka pri pridobivanju prijateljev:', error.message);
+        }
+      };
+  
+    useEffect(() => {
+      seznamPrijateljev()
     }, [projekt])
 
-
+    const dodaj_k_projektu = async () => {
+        try {
+            const uspešnoDodani = await Promise.all(
+                izbraniPrijatelji.map(async (prijatelj) => {
+                    await dodajVprojekt(prijatelj, id); 
+                    return prijatelj; 
+                })
+            );
+            setIzbraniPrijatelji((prev) =>
+                prev.filter((prijatelj) => !uspešnoDodani.includes(prijatelj))
+            );
+    
+            console.log('Vsi prijatelji so uspešno dodani in odstranjeni iz seznama.');
+        } catch (error) {
+            console.log('Napaka pri dodajanju prijateljev:', error.message);
+        }
+    };
+    
+    
 
 
     return (
@@ -89,7 +154,7 @@ const [projekt, setProjekt] = useState();
                                         <span className="text-gray-800">{udelezenec}</span>
                                     </div>
                                 ))}
-                                <div className="w-[38px] h-[38px] bg-gray-300 text-gray-600 hover:bg-gray-400 border border-gray-500 border-2 rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200">
+                                <div onClick={() => setModalOpen(true)} className="w-[38px] h-[38px] bg-gray-300 text-gray-600 hover:bg-gray-400 border border-gray-500 border-2 rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200">
                                     <AiOutlinePlus className="text-4xl" />
                                 </div>
                             </div>
@@ -221,9 +286,8 @@ const [projekt, setProjekt] = useState();
                     ))    
                 }
                 </div>
-
-
             </div>
+            {modalOpen && <DodajUserjeModal isOpen={modalOpen} onClose={handleCloseModal}  prijatelji={prijatelji} izbraniPrijatelji={izbraniPrijatelji} izberiPrijatelja={izberiPrijatelja} odstraniPrijatelja={odstraniPrijatelja} dodaj_k_projektu={dodaj_k_projektu} />}
         </div>
     );
 }

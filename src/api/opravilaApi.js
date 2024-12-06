@@ -34,7 +34,7 @@ export const posodobiPrioritetoOpravila = async (id, prioriteta) => {
 };
 
 export const izbrisiOpravilo = async (id) => {
-  const response = await axios.delete(`${API_URL}/delete/${id}`);
+  const response = await axios.put(`${API_URL}/delete/${id}`);
   return response.data;
 };
 
