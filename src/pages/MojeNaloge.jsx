@@ -5,9 +5,14 @@ import confetti from "canvas-confetti";
 import { IoInformationOutline } from "react-icons/io5";
 import { dodajNalogo, posodobiStanjeNaloge, pridobiNaloge } from "../api/nalogeApi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaClock, FaInfo, FaTrash } from "react-icons/fa";
+import { LuBadgeCheck } from "react-icons/lu";
+import Loading from "./Loading";
 
 function MojeNaloge() {
 
+  const [nalogeLoading, setNalogeLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const my_username = 'martin'
 
@@ -24,7 +29,7 @@ function MojeNaloge() {
   const navigate = useNavigate()
 
   /*{ ime, lastnik, rok, opis, stanje, id_projekt, ime_projekta }*/
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {  //to bos potem, vkljuci na stran MojProjekt.jsx, samo tam bos lahko dodal nalogo zase ali za koga drugega
     try {
       const novaNaloga = {
         ime : 'vtekunaloga',
@@ -56,11 +61,14 @@ function MojeNaloge() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setNalogeLoading(true)
       try {
         const data = await pridobiNaloge(my_username);
         setNaloge(data);
       } catch (error) {
-        alert(error.message);
+        toast.error('Napaka pri pridobivanju nalog.');
+      } finally {
+        setNalogeLoading(false)
       }
     };
     fetchData();
@@ -93,9 +101,9 @@ function MojeNaloge() {
         );
           reactConfetti();
       }
+      toast.success('Naloga uspešno označena kot končana!')
     } catch (error) {
-      console.error("Napaka pri posodabljanju naloge:", error.message);
-      alert("Napaka pri posodabljanju naloge. Poskusite znova.");
+      toast.error("Napaka pri posodabljanju stanja naloge.");
     }
   };
   
@@ -105,10 +113,6 @@ function MojeNaloge() {
     <div>
       <div className="p-4 bg-white border-b shadow-sm sticky top-0 z-10 flex justify-between items-center">
         <h2 className="text-lg font-semibold text-gray-700">Moje naloge</h2>
-        <button onClick={() => setModalOpen(true)} className="flex items-center space-x-2 px-4 bg-white border border-gray-500 hover:bg-gray-200 text-gray-700 rounded-md shadow-sm">
-          <FiPlus className="text-lg" />
-          <span>Nova naloga</span>
-        </button>
       </div>
       <div className="flex items-center space-x-4 bg-white p-1 rounded-lg shadow-md mt-2">
         {filters.map((f, index) => (
@@ -122,34 +126,37 @@ function MojeNaloge() {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-3 gap-4 p-4 bg-white flex">
-        {
-          naloge.map((naloga, index) => (
-            <div key={index} className={`${naloga.stanje === 'končano' ? 'bg-green-200' : (naloga.stanje === 'nedokončano' ? 'bg-blue-100' : 'bg-white')}  border-blue-800 border cursor-pointer inline rounded-sm p-4 flex items-center space-x-4 transform shadow-md transition-transform hover:shadow-xl ${(filter !== 'vsi' && filter !== naloga.stanje) ? 'hidden': ''}`}>
-              {
-                naloga.stanje === 'končano' ? 
-                <FaCheckDouble /> :
-                <input
-                  onClick={() => toggleStanje(naloga._id)}
-                  type="checkbox"
-                  className="w-5 h-5 accent-blue-600"
-                /> 
-              }
-              <div>
-                <div className="text-lg font-semibold">
-                  {naloga.ime}
-                </div>
-                <div className="text-sm">
-                  Projekt: {naloga.ime_projekta}
-                </div>
-
-              </div>
-              <div onClick={() => navigate(`${naloga._id}`)} className="absolute right-3 bg-white rounded-full border-[2px] border-black hover:bg-gray-200">
-                <IoInformationOutline size={20} />
-              </div>
-            </div>
-          ))
-        }
+      <div className={`grid grid-cols-3 gap-4 p-4 bg-white flex ${nalogeLoading ? 'flex items-center justify-center h-[100px] w-[270%]' : ''}`}>
+                { nalogeLoading ? <Loading /> : 
+                    (naloge && naloge.map((naloga, index) => ( 
+                        <div key={index} class={`bg-white w-[80%] my-[10px] rounded-lg shadow-md p-4 border border-gray-300 hover:shadow-lg transition-all duration-200 ${(filter !== 'vsi' && filter !== naloga.stanje) ? 'hidden' : ''}`}>
+                        <h3 className="text-lg font-semibold text-gray-800">{naloga.ime}</h3>
+                        <p className="text-gray-600 mt-2 line-clamp-2">
+                          {naloga.lastnik}
+                        </p>
+                        <div className="flex items-center justify-between mt-4">
+                          <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${naloga.stanje === 'končano' ? 'bg-green-200 text-green-600' : (naloga.stanje === 'vteku' ? 'bg-blue-100 text-blue-600' : 'bg-yellow-100 text-yellow-600')}`}>
+                            {naloga.stanje === 'vteku' ? 'V teku' : naloga.stanje}
+                          </span>
+                          
+                          <span className="text-gray-500 text-sm"><strong><FaClock className="text-indigo-600" />{naloga.rok}</strong></span>
+                        </div>
+                        <div className="mt-4 flex items-center justify-end space-x-2">
+                          {naloga.stanje !== 'končano' && 
+                          <button onClick={() => toggleStanje(naloga._id)} className="font-bold pr-[5px] text-[23px] text-sm font-medium text-green-600 hover:text-green-800 hover:underline">
+                              <LuBadgeCheck />                          
+                          </button>
+                          }
+                          <button onClick={() => navigate(`/moje-naloge/${naloga._id}`)} className="py-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline">
+                            <FaInfo />                          
+                          </button>
+                          <button className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 hover:underline">
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </div>
+                    )))   
+                }
       </div>
     </div>
   );

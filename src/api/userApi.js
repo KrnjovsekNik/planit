@@ -20,16 +20,29 @@ export const pridobiUserja = async (name) => {
 };
 
 
+
+
 export const dodajPrijatelja = async (username, friend) => {
   try {
     const response = await axios.post('http://localhost:5000/api/addFriend', {
       username,
       friend,
     });
-    return response.data;
+
+    return {
+      success: true,
+      message: response.data?.message || "Prijatelj uspešno dodan.",
+      data: response.data,
+    };
   } catch (error) {
-    throw new Error(
-      error.response?.data?.message || "Napaka pri dodajanju prijatelja."
-    );
+    console.error("Napaka pri dodajanju prijatelja:", error.response?.data || error.message);
+
+    return {
+      success: false,
+      message: error.response?.data?.message || "Napaka pri dodajanju prijatelja.",
+      error: error.response?.data || error.message, 
+    };
   }
 };
+
+

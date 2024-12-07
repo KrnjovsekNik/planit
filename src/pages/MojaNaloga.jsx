@@ -7,6 +7,7 @@ import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { TbBellRinging } from "react-icons/tb";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { izbrisiOpravilo, posodobiPrioritetoOpravila, posodobiStanjeOpravila, pridobiOpravila } from "../api/opravilaApi";
+import { toast } from "react-toastify";
 
 function MojaNaloga() {
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
@@ -22,7 +23,7 @@ function MojaNaloga() {
             const response = await pridobiNalogo(id);
             setNaloga(response);
         } catch (error) {
-            console.log(error.message);
+            toast.error('Napaka pri pridobivanju nalog');
         }
     };
 
@@ -31,7 +32,7 @@ function MojaNaloga() {
             const response = await pridobiOpravila(id)
             setOpravila(response)
         } catch (error) {
-           console.log(error.message) 
+           toast.error('Napaka pri pridobivanju opravil') 
         }
     }
 
@@ -61,9 +62,9 @@ function MojaNaloga() {
           const response = await izbrisiOpravilo(id);
           const updatedOpravila = opravila.filter((opravilo) => opravilo._id !== id);
           setOpravila(updatedOpravila);
-          console.log(response);
+          toast.success(`Opravilo uspešno izbrisano.`)
         } catch (error) {
-          console.error(error.message);
+          toast.error('Napaka pri brisanju opravila.')
         }
       };
 

@@ -9,11 +9,15 @@ import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
 import DodajUserjeModal from "./DodajUserjeModal";
 import { pridobiUserja } from "../api/userApi";
+import { toast } from "react-toastify";
+import Loading from "./Loading";
 
 function MojProjekt() {
     const username = 'martin'
     const [modalOpen, setModalOpen] = useState(false);
     const [dodanoP, setDodanoP] = useState(0)
+
+    const [udel, setUdel] = useState([])
 
     const handleCloseModal = () => {
         setModalOpen(false)
@@ -36,35 +40,51 @@ function MojProjekt() {
     const [toggleVteku, setToggleVteku] = useState(false)
     const [toggleKoncano, setToggleKoncano] = useState(false)
 
+    const [loading, setLoading] = useState(false)
+    const [loading2, setLoading2] = useState(false)
+
+
     const fetchData = async () => {
+        setLoading(true)
         try {
             const response = await pridobiProjekt(id);
             setProjekt(response);
         } catch (error) {
-            console.log(error.message);
+            toast.error('Napaka pri pridobivanju projekta');
+        } finally {
+          setLoading(false)
         }
     };
 
     const fetchData2 = async () => {
+        setLoading2(true)
         try {
             const response = await pridobiProjektneNaloge(id)
             setNaloge(response);
             setNalozilo(nalozilo+1)
         } catch (error) {
-            console.log(error.message);
+            toast.error('Napaka pri pridobivanju projektnih nalog');
+        } finally {
+          setLoading2(false)
         }
     };
     useEffect(() => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        fetchData2()
-    }, [projekt, prijatelji])
+
 
     useEffect(() => {
         fetchData()
     }, [dodanoP])
+
+    useEffect(() => {
+      fetchData2()
+  }, [projekt, prijatelji])
+
+    useEffect(() => {
+      setUdel(projekt ? projekt.udelezenci : [])
+    }, [projekt])
 
     const [izbraniPrijatelji, setIzbraniPrijatelji] = useState([])
   
@@ -88,7 +108,7 @@ function MojProjekt() {
       
           setPrijatelji(filtriraniPrijatelji);
         } catch (error) {
-          console.log('Napaka pri pridobivanju prijateljev:', error.message);
+          toast.error('Napaka pri pridobivanju prijateljev:', error.message);
         }
       };
   
@@ -108,9 +128,8 @@ function MojProjekt() {
                 prev.filter((prijatelj) => !uspešnoDodani.includes(prijatelj))
             );
     
-            console.log('Vsi prijatelji so uspešno dodani in odstranjeni iz seznama.');
         } catch (error) {
-            console.log('Napaka pri dodajanju prijateljev:', error.message);
+            toast.error('Napaka pri dodajanju prijateljev:', error.message);
         }
     };
     
@@ -125,9 +144,8 @@ function MojProjekt() {
             </div>
 
             {/*PODATKI O projektu */}
-
-            <div className="w-full mx-auto mt-6 p-6 bg-white rounded-lg border-b-2 border-gray-500">
-                {projekt ? (
+            <div className={`w-full mx-auto mt-6 p-6 bg-white rounded-lg border-b-2 border-gray-500 ${loading ? 'items-center justify-center flex': ''}`}>
+                {loading ? <Loading /> : (projekt ? (
                     <div className="space-y-4">
                         <h3 className="text-xl font-bold text-gray-800">Podrobnosti o projektu</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -144,7 +162,7 @@ function MojProjekt() {
                         <div>
                             <strong className="text-lg font-semibold text-gray-800">Udeleženci:</strong>
                             <div className="flex items-center flex-wrap space-x-2 mt-2">
-                                {projekt.udelezenci.map((udelezenec, index) => (
+                                {udel.map((udelezenec, index) => (
                                     <div key={index} className="flex items-center space-x-2">
                                         <img
                                             className="w-[38px] h-[38px] rounded-full border-2 border-blue-500"
@@ -161,8 +179,8 @@ function MojProjekt() {
                         </div>
                     </div>
                 ) : (
-                    <div className="text-gray-500 text-center py-6">Loading...</div>
-                )}
+                    <div className="items-center justify-center flex"><Loading /></div>
+                ))}
             </div>
 
             <div className='w-[100%] flex justify-end p-[5px]'>
@@ -199,6 +217,10 @@ function MojProjekt() {
                                 )}
                 </span>
             </div>
+            {loading2 ? 
+            <div className='w-full flex items-center justify-center h-[100px]'>
+                <Loading />
+            </div> : (
             <div className="grid grid-cols-3 px-[20px]">
                 <div>
                 {toggleNedokoncano && 
@@ -286,7 +308,8 @@ function MojProjekt() {
                     ))    
                 }
                 </div>
-            </div>
+            </div>)
+            }
             {modalOpen && <DodajUserjeModal isOpen={modalOpen} onClose={handleCloseModal}  prijatelji={prijatelji} izbraniPrijatelji={izbraniPrijatelji} izberiPrijatelja={izberiPrijatelja} odstraniPrijatelja={odstraniPrijatelja} dodaj_k_projektu={dodaj_k_projektu} />}
         </div>
     );

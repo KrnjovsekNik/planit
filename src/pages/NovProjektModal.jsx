@@ -3,6 +3,8 @@ import { dodajProjekt } from "../api/projectApi";
 import { pridobiUserja } from "../api/userApi";
 import { useEffect } from "react";
 import { FaXmark } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import Loading from "./Loading";
 
 function NovProjektModal({ isOpen, onClose }) {
   const name = 'martin';
@@ -11,6 +13,8 @@ function NovProjektModal({ isOpen, onClose }) {
   const [opis, setOpis] = useState("");
   const [rok, setRok] = useState("");
   const [prijatelji, setPrijatelji] = useState(null)
+
+  const [loading, setLoading] = useState(false)
 
   const [izbraniPrijatelji, setIzbraniPrijatelji] = useState([])
 
@@ -25,8 +29,12 @@ function NovProjektModal({ isOpen, onClose }) {
   }
 
   const seznamPrijateljev = async () => {
-    const data = await pridobiUserja(name);
-    setPrijatelji(data[0].prijatelji);
+    try {
+      const data = await pridobiUserja(name);
+      setPrijatelji(data[0].prijatelji);
+    } catch (error) {
+      toast.error('Napaka pri pridobitvi lastnik podatkov.')
+    }
   }
 
   useEffect(() => {
@@ -34,6 +42,7 @@ function NovProjektModal({ isOpen, onClose }) {
   }, [])
 
   const handleSubmit = async (e) => {
+    setLoading(true)
     e.preventDefault();
     try {
       const novProjekt = {
@@ -42,16 +51,17 @@ function NovProjektModal({ isOpen, onClose }) {
         rok,
         udelezenci: [...izbraniPrijatelji, name] 
       };
-
       await dodajProjekt(novProjekt);
       setIme("");
       setOpis("");
       setRok("");
       setIzbraniPrijatelji("");
-      onClose();
+      toast.success(`Projekt ${ime} uspešno dodan`)
     } catch (err) {
-      console.error("Napaka pri dodajanju projekta:", err);
-      alert("Napaka pri dodajanju projekta. Poskusite znova.");
+      toast.error("Napaka pri dodajanju projekta.");
+    } finally {
+      setLoading(false)
+      onClose();
     }
   };
 
@@ -145,7 +155,7 @@ function NovProjektModal({ isOpen, onClose }) {
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             >
-              Dodaj projekt
+              {loading ? <Loading /> : 'Dodaj projekt'}
             </button>
           </div>
         </form>

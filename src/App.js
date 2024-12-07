@@ -16,6 +16,9 @@ import NovProjekt from './pages/NovProjektModal';
 import MojaNaloga from './pages/MojaNaloga';
 import MojProjekt from './pages/MojProjekt';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   return (
     <div className="app-container">
@@ -39,6 +42,7 @@ function App() {
           </Routes>
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="dark" />
     </div>
   );
 }

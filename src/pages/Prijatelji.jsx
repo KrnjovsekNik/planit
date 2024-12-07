@@ -3,10 +3,16 @@ import ChatPage from './ChatPage';
 import AddFriendModal from './AddFriendModal';
 import { FiPlus } from 'react-icons/fi';
 import { pridobiUserja } from '../api/userApi';
+import { toast } from 'react-toastify';
+import Loading from './Loading';
 
 const Prijatelji = () => {
 
     const name = 'martin'
+
+    const [chatLoading, setChatLoading] = useState(false)
+    const [msgLoading, setMsgLoading] = useState(false)
+    const [prijateljiLoading, setPriateljiLoading] = useState(false);
 
     const [loading, setLoading] = useState(false)
     const [novPrijatelj, setNovPrijatelj] = useState(0);
@@ -19,11 +25,14 @@ const Prijatelji = () => {
 
     const fetchData = async () => {
         try {
+          setPriateljiLoading(true)
           const data = await pridobiUserja(name);
           setUser(data);
           setPrijatelji(data[0].prijatelji);
         } catch (error) {
-          alert(error.message);
+          toast.error('Napaka pri pridobitvi lastnih podatkov.')
+        } finally {
+          setPriateljiLoading(false)
         }
       };
 
@@ -34,9 +43,6 @@ const Prijatelji = () => {
     const dodano = () => {
         fetchData()
     }
-
-
-    
 
     return (
         <div className="flex h-screen bg-gray-50">
@@ -52,8 +58,8 @@ const Prijatelji = () => {
                         </button>
                     </div>
                 </div>
-                <div className="p-4 overflow-y-auto h-[calc(100%-65px)]">
-                    {prijatelji ? prijatelji.map((friend, index) => (
+                <div className={`p-4 overflow-y-auto h-[calc(100%-65px)] ${prijateljiLoading ? 'flex h-full items-center justify-center mt-[-100px]' : ''}`}>
+                    {prijateljiLoading ? <Loading /> : (prijatelji ? prijatelji.map((friend, index) => (
                         <div
                             onClick={() => setPrijatelj(friend)}
                             key={index}
@@ -63,13 +69,13 @@ const Prijatelji = () => {
                                 <h3 className="text-sm font-medium text-gray-700">{friend}</h3>
                             </div>
                         </div>
-                    )) : ''}
+                    )) : '')}
                 </div>
             </div>
 
             {/* Chat Area */}
             <div className="flex-1 flex py-[5px] flex-col ml-[280px]">
-                <ChatPage name={prijatelj} />
+                <ChatPage name={prijatelj} setChatLoading={setChatLoading} msgLoading={msgLoading} chatLoading={chatLoading} setMsgLoading={setMsgLoading} />
             </div>
 
             <AddFriendModal

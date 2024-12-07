@@ -3,19 +3,26 @@ import { FiPlus } from "react-icons/fi";
 import NovProjektModal from "./NovProjektModal";
 import { pridobiProjekte } from "../api/projectApi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Loading from "./Loading";
 
 function MojiProjekti() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [projekti, setProjekti] = useState([]);
   const navigate = useNavigate()
 
+  const [projektLoading, setProjektLoading] = useState(false)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setProjektLoading(true)
         const data = await pridobiProjekte();
         setProjekti(data);
       } catch (error) {
-        alert(error.message);
+        toast.error('Napaka pri pridobivanju projektov');
+      } finally {
+        setProjektLoading(false)
       }
     };
     fetchData();
@@ -23,10 +30,13 @@ function MojiProjekti() {
 
   const dobiProjekte = async () => {
     try {
+      setProjektLoading(true)
       const data = await pridobiProjekte();
       setProjekti(data);
     } catch (error) {
-      alert(error.message);
+      toast.error('Napaka pri pridobivanju projektov');
+    } finally {
+      setProjektLoading(false)
     }
   };
 
@@ -71,7 +81,7 @@ function MojiProjekti() {
         </div>
 
         <ul>
-          {projekti.map((projekt, index) => (
+          {projektLoading ? <Loading /> : (projekti && projekti.map((projekt, index) => (
             <li
               key={index}
               onClick={() => navigate(`${projekt._id}`)}
@@ -93,7 +103,7 @@ function MojiProjekti() {
 
               <div>{projekt.rok ? new Date(projekt.rok).toLocaleDateString() : " - "}</div>
             </li>
-          ))}
+          )))}
         </ul>
       </div>
 

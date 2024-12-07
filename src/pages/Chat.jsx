@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import GroupChatPage from './GroupchatPage';
 import { pridobiProjekte } from '../api/projectApi';
+import { toast } from 'react-toastify';
 
 const Chat = () => {
     const [selectedGroup, setGroup] = useState([]);
@@ -11,7 +12,7 @@ const Chat = () => {
           const data = await pridobiProjekte();
           setProjekti(data);
         } catch (error) {
-          alert(error.message);
+          toast.error('Napaka pri pridobivanju projektov');
         }
     };
     useEffect(() => {

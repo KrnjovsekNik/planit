@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { dodajProjekt } from "../api/projectApi"; 
 
-function MojaNalogaModal({ isOpen, onClose }) {
+function MojaNalogaModal({ isOpen, onClose }) { //to bo potem implementirano
   const [ime, setIme] = useState("");
   const [opis, setOpis] = useState("");
   const [rok, setRok] = useState("");
@@ -24,8 +24,7 @@ function MojaNalogaModal({ isOpen, onClose }) {
       setUdelezenci("");
       onClose();
     } catch (err) {
-      console.error("Napaka pri dodajanju projekta:", err);
-      alert("Napaka pri dodajanju projekta. Poskusite znova.");
+      toast.error("Napaka pri dodajanju projekta.");
     }
   };
 

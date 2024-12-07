@@ -3,6 +3,7 @@ import { IoMdClose } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 import Loading from "./Loading";
 import { dodajPrijatelja, pridobiUserja } from "../api/userApi";
+import { toast } from "react-toastify";
 
 const AddFriendModal = ({
   isOpen,
@@ -16,29 +17,37 @@ const AddFriendModal = ({
 }) => {
   const my_username = "martin";
 
+
   const handleAddFriend = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      if (!prijatelji.includes(addedFriend)) {
-        const user = await pridobiUserja(addedFriend);
-        if (user[0].username === addedFriend) {
-          await dodajPrijatelja(my_username, addedFriend);
-        } else {
-          console.log("ta username ne obstaja");
-        }
-      } else {
-        console.log("ta prijatelj je že dodan");
+      if (prijatelji.includes(addedFriend)) {
+        toast.warning(`${addedFriend} je že dodan.`);
+        return;
       }
+      const user = await pridobiUserja(addedFriend);
+      if (!user[0]?.username) {
+        toast.warning(`${addedFriend} ne obstaja.`);
+        return;
+      }
+  
+      const response = await dodajPrijatelja(my_username, addedFriend);
+      response.success
+        ? toast.success(`${addedFriend} uspešno dodan`)
+        : toast.error(`Napaka pri dodajanju prijatelja ${addedFriend}`);
     } catch (error) {
-      console.log(error.message);
+      toast.error(error.message || "Napaka pri dodajanju prijatelja.");
     } finally {
       setLoading(false);
       onClose();
-      dodano();
-      setAddedFriend('')
+      setAddedFriend("");
     }
+    dodano();
   };
+  
+  
+  
 
   if (!isOpen) return null;
 
