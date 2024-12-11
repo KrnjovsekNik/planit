@@ -3,8 +3,8 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/opravila';
 
 // dodaj opravilo
-export const dodajOpravilo = async (opravilo) => {
-  const response = await axios.post(API_URL, opravilo);
+export const dodajOpravilo = async (id_naloge, opis, stanje, prioriteta) => {
+  const response = await axios.post(`${API_URL}/${id_naloge}/${opis}/${stanje}/${prioriteta}`);
   return response.data;
 };
 

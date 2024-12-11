@@ -51,6 +51,7 @@ const ChatPage = ({ name, setChatLoading, setMsgLoading, chatLoading, msgLoading
         fetchData();
     }, [name, sprememba]);
 
+
     const EndRef = useRef (null);
 
     //tu te da na zacetek, pazi na to, da se to zgodi usakic, ko se messages updejta (setMessages)...

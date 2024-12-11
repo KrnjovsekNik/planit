@@ -8,8 +8,12 @@ import { TbBellRinging } from "react-icons/tb";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { izbrisiOpravilo, posodobiPrioritetoOpravila, posodobiStanjeOpravila, pridobiOpravila } from "../api/opravilaApi";
 import { toast } from "react-toastify";
+import { FiPlus } from "react-icons/fi";
+import DodajOpraviloModal from "./DodajOpraviloModal";
 
 function MojaNaloga() {
+    const [opraviloModal, setOpraviloModal] = useState(false)
+
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
     const [activeDropdownIndex2, setActiveDropdownIndex2] = useState(null);
 
@@ -141,8 +145,11 @@ function MojaNaloga() {
 
     useEffect(() => {
         fetchData();
-        fetchOpravila();
     }, []);
+
+    useEffect(() => {
+        fetchOpravila();
+    }, [opraviloModal])
 
     const getRandomColor = (index) => {
         const colors = ["bg-red-500", "bg-gray-500", "bg-blue-500", "bg-green-500", 'bg-pink-600', 'bg-violet-600'];
@@ -158,7 +165,7 @@ function MojaNaloga() {
 
             {/*PODATKI O NALOGI */}
 
-            <div className="w-full mx-auto mt-6 p-6 bg-white rounded-lg shadow-lg">
+            <div className="w-full mx-auto mt-6 p-6 bg-white rounded-lg shadow-md">
                 {naloga ? (
                     <div className="space-y-4">
                         <h3 className="text-xl font-bold text-gray-800">Podrobnosti o nalogi</h3>
@@ -206,11 +213,20 @@ function MojaNaloga() {
                         <p className="text-gray-600 mt-4">
                             <strong>Opis:</strong> {naloga.opis}
                         </p>
+                        <div className='w-[100%] flex justify-end px-[5px] py-[1px]'>
+                            <button onClick={() => setOpraviloModal(true)} className="flex items-center space-x-2 px-4 bg-white border border-gray-500 hover:bg-gray-200 text-gray-700 rounded-md shadow-sm">
+                                <FiPlus className="text-lg" />
+                                <span>Novo opravilo</span>
+                            </button>
+                        </div>
                     </div>
+                    
                 ) : (
                     <div className="text-gray-500 text-center py-6">Nalagam podatke o nalogi...</div>
                 )}
             </div>
+
+
         
 
             {/* prvi del */}
@@ -316,6 +332,7 @@ function MojaNaloga() {
 
                 </div>
             </ul>
+            {opraviloModal && <DodajOpraviloModal isOpen={opraviloModal} setOpen={setOpraviloModal} id_naloge={id} />}
         </div>
     );
 }
