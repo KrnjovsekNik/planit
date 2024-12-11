@@ -2,7 +2,6 @@ import { AiOutlineHome, AiOutlineMessage } from 'react-icons/ai';
 import { BsGraphUp, BsClipboardCheck } from 'react-icons/bs';
 import { MdOutlineTaskAlt } from 'react-icons/md';
 import { FaUserFriends } from "react-icons/fa";
-import { FaCalendarAlt } from "react-icons/fa";
 let routes = [
     {
       label: "Home",     // Name of the navigation item
@@ -40,12 +39,6 @@ let routes = [
      requiresAuth: true,
      icon: <FaUserFriends />
     },
-    {
-      label: "Koledar",
-      path: "/koledar",
-      requiresAuth: true,
-      icon: <FaCalendarAlt />
-     },
   ];
 
 export default routes;

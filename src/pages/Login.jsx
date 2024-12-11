@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { pridobiUserja } from "../api/userApi"; // Uvoz API funkcije za dodajanje projektov
+import { pridobiPrijavo } from "../api/userApi"; // Uvoz API funkcije za dodajanje projektov
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [username, setIme] = useState("");
@@ -14,12 +15,13 @@ export default function Login() {
         password,
       };
       // Klic API za preverjanje prijave
-      const data = await pridobiUserja(Uporabnik);
-      if(data && data.length > 0)
+      const data = await pridobiPrijavo(Uporabnik);
+      if(data.success == true)
       {
-        sessionStorage.setItem('username', data[0].username);
-        sessionStorage.setItem('_id', data[0]._id);
+        toast.info(data.message);
         window.location.href = "/home";
+      }if(data.success == false){
+        toast.error(data.message);
       }
 
       // Po uspešnem dodajanju počisti polja in zapri modalno okno
