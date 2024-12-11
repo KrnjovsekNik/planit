@@ -17,7 +17,7 @@ function MojiProjekti() {
     const fetchData = async () => {
       try {
         setProjektLoading(true)
-        const data = await pridobiProjekte();
+        const data = await pridobiProjekte(sessionStorage.getItem("username"));
         setProjekti(data);
       } catch (error) {
         toast.error('Napaka pri pridobivanju projektov');
@@ -31,7 +31,7 @@ function MojiProjekti() {
   const dobiProjekte = async () => {
     try {
       setProjektLoading(true)
-      const data = await pridobiProjekte();
+      const data = await pridobiProjekte(sessionStorage.getItem("username"));
       setProjekti(data);
     } catch (error) {
       toast.error('Napaka pri pridobivanju projektov');

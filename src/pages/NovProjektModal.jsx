@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import Loading from "./Loading";
 
 function NovProjektModal({ isOpen, onClose }) {
-  const name = 'martin';
+  const name = sessionStorage.getItem("username");
 
   const [ime, setIme] = useState("");
   const [opis, setOpis] = useState("");

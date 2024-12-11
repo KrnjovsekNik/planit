@@ -15,7 +15,7 @@ const AddFriendModal = ({
   setAddedFriend,
   dodano,
 }) => {
-  const my_username = "martin";
+  let my_username = sessionStorage.getItem('username');
 
 
   const handleAddFriend = async (e) => {

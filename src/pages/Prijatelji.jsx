@@ -8,7 +8,7 @@ import Loading from './Loading';
 
 const Prijatelji = () => {
 
-    const name = 'martin'
+    const name = sessionStorage.getItem("username");
 
     const [chatLoading, setChatLoading] = useState(false)
     const [msgLoading, setMsgLoading] = useState(false)
@@ -27,6 +27,7 @@ const Prijatelji = () => {
         try {
           setPriateljiLoading(true)
           const data = await pridobiUserja(name);
+          console.log(data);
           setUser(data);
           setPrijatelji(data[0].prijatelji);
         } catch (error) {
