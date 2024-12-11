@@ -9,7 +9,7 @@ const Chat = () => {
 
     const fetchData = async () => {
         try {
-          const data = await pridobiProjekte();
+          const data = await pridobiProjekte('martin');
           setProjekti(data);
         } catch (error) {
           toast.error('Napaka pri pridobivanju projektov');
