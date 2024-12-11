@@ -9,8 +9,8 @@ export const dodajProjekt = async (projekt) => {
 };
 
 // pridobi vse projekte
-export const pridobiProjekte = async () => {
-  const response = await axios.get(API_URL);
+export const pridobiProjekte = async (username) => {
+  const response = await axios.get(`${API_URL}/${username}`);
   return response.data;
 };
 

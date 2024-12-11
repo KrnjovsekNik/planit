@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import Loading from "./Loading";
 
 function MojProjekt() {
-    const username = 'martin'
+    const username = sessionStorage.getItem("username");
     const [modalOpen, setModalOpen] = useState(false);
     const [dodanoP, setDodanoP] = useState(0)
 
@@ -101,6 +101,8 @@ function MojProjekt() {
     const seznamPrijateljev = async () => {
         try {
           const data = await pridobiUserja(username);
+          console.log("tukaj");
+          console.log(data);
           const prijateljiSeznam = data[0].prijatelji;
           const filtriraniPrijatelji = prijateljiSeznam.filter(
             (prijatelj) => !projekt?.udelezenci.includes(prijatelj)
@@ -133,9 +135,6 @@ function MojProjekt() {
         }
     };
     
-    
-
-
     return (
         <div>
             {/* drugi del */}
