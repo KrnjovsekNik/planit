@@ -18,6 +18,7 @@ import MojProjekt from './pages/MojProjekt';
 import UporabnikPrijavljen from './pages/UporabnikPrijavljen';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Koledar from './pages/Koledar';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
                       <Route path="/new-project" element={<NovProjekt />} />
                       <Route path="/moje-naloge/:id" element={<MojaNaloga />} />
                       <Route path="/moji-projekti/:id" element={<MojProjekt />} />
+                      <Route path="/koledar" element={<Koledar />} />
                     </Routes>
                   </div>
                 </div>

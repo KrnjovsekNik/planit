@@ -1,0 +1,35 @@
+.calendar-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .calendar-container {
+    width: 100%;
+    max-width: 1200px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1),
+                0 15px 40px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    overflow: hidden;
+  }
+  
+  .custom-big-calendar {
+    height: 500px;
+    background-color: white;
+  }
+  
+  .custom-event {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.5;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .custom-event:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
