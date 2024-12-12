@@ -25,6 +25,7 @@ export default function Register() {
         alert("Gesla se ne ujemata!");
       }else{
         await dodajUserja(novUporabnik);
+        window.location.href = "/login";
       }
 
       // Po uspešnem dodajanju počisti polja in zapri modalno okno
@@ -38,8 +39,7 @@ export default function Register() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-    
+    <div className="flex w-screen items-center justify-center min-h-screen bg-gray-100">
       {/* registracija */}
       <div className="bg-white p-8 shadow-lg rounded-md w-96">
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Registracija</h2>

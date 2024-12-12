@@ -32,5 +32,3 @@ export const posodobiStanjeNaloge = async (_id) => {
   const response = await axios.put(`${API_URL}/stanje/${_id}`)
   return response.data;
 };
-
-

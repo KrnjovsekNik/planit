@@ -6,6 +6,7 @@ const API_URL = 'http://localhost:5000/api/friendchats';
 
 export const dodajFriendChat = async (novFriendChat) => {
   const response = await axios.post(API_URL, novFriendChat);
+  console.log("jajajajja");
   return response.data;
 };
 
