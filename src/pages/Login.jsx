@@ -34,7 +34,7 @@ export default function Login() {
   };
   
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex w-screen items-center justify-center min-h-screen bg-gray-100">
       {/* forma za login */}
       <div className="bg-white p-8 shadow-lg rounded-md w-96">
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Prijava</h2>

@@ -15,7 +15,7 @@ export const pridobiProjekte = async (username) => {
 };
 
 export const pridobiProjekt = async (id) => {
-  const response = await axios.get(`${API_URL}/${id}`);
+  const response = await axios.get(`${API_URL}/dobi/${id}`);
   return response.data;
 };
 

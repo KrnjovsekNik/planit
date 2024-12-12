@@ -12,7 +12,7 @@ export const dodajUserja = async (user) => {
 export const pridobiUserja = async (username) => {
   console.log(username);
   const params = {username: username};
-  const response = await axios.post(API_URL + "/getuser", params);
+  const response = await axios.post(`${API_URL}/getuser`, params);
   console.log(response.data);
   return response.data;
 };

@@ -28,7 +28,6 @@ function App() {
           path="/*"
           element={
             <UporabnikPrijavljen>
-              <div className="app-content">
                 <Sidebar />
                 <div className="main-content">
                   <Navbar />
@@ -48,7 +47,7 @@ function App() {
                     </Routes>
                   </div>
                 </div>
-              </div>
+              
             </UporabnikPrijavljen>
           }
         />
