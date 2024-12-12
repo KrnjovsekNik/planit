@@ -5,7 +5,7 @@ import { FaUserFriends } from "react-icons/fa";
 let routes = [
     {
       label: "Home",     // Name of the navigation item
-      path: "/",         // Corresponding route
+      path: "/home",         // Corresponding route
       requiresAuth: false, // Whether authentication is required
       icon: <AiOutlineHome /> 
     },
@@ -39,6 +39,12 @@ let routes = [
      requiresAuth: true,
      icon: <FaUserFriends />
     },
+    {
+      label: "Koledar",
+      path: "/koledar",
+      requiresAuth: true,
+      icon: <FaUserFriends />
+     },
   ];
 
 export default routes;
