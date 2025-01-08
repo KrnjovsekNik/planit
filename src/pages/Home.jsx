@@ -130,6 +130,7 @@ function Homepage() {
         </div>
 
         {/* Koledar */}
+        {/*
         <div className="bg-white p-6 rounded-lg shadow-lg relative">
           <h3 className="text-xl font-semibold mb-4">Koledar</h3>
           <div 
@@ -148,7 +149,7 @@ function Homepage() {
           >
             Več
           </button>
-        </div>
+        </div>*/}
       </div>
 
       {napaka && <div className="text-red-500 mt-4">{napaka}</div>}
