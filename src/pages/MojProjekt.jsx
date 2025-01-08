@@ -72,8 +72,6 @@ function MojProjekt() {
         fetchData();
     }, []);
 
-
-
     useEffect(() => {
         fetchData()
     }, [dodanoP])
@@ -83,7 +81,7 @@ function MojProjekt() {
   }, [projekt, prijatelji])
 
     useEffect(() => {
-      setUdel(projekt ? projekt.udelezenci : [])
+      setUdel(projekt ? projekt.udelezenci : []);
     }, [projekt])
 
     const [izbraniPrijatelji, setIzbraniPrijatelji] = useState([])
@@ -101,13 +99,10 @@ function MojProjekt() {
     const seznamPrijateljev = async () => {
         try {
           const data = await pridobiUserja(username);
-          console.log("tukaj");
-          console.log(data);
           const prijateljiSeznam = data[0].prijatelji;
           const filtriraniPrijatelji = prijateljiSeznam.filter(
             (prijatelj) => !projekt?.udelezenci.includes(prijatelj)
           );
-      
           setPrijatelji(filtriraniPrijatelji);
         } catch (error) {
           toast.error('Napaka pri pridobivanju prijateljev:', error.message);

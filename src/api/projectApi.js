@@ -8,12 +8,13 @@ export const dodajProjekt = async (projekt) => {
   return response.data;
 };
 
-// pridobi vse projekte
+// pridobi vse projekte po imenu
 export const pridobiProjekte = async (username) => {
   const response = await axios.get(`${API_URL}/${username}`);
   return response.data;
 };
 
+// pridobi 
 export const pridobiProjekt = async (id) => {
   const response = await axios.get(`${API_URL}/dobi/${id}`);
   return response.data;

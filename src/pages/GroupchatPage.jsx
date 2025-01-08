@@ -6,7 +6,7 @@ import Loading from './Loading';
 
 const GroupChatPage = ({ id_skupine, groupname }) => {
 
-    const my_username = 'martin'
+    const my_username = sessionStorage.getItem("username");
     const [messages, setMessages] = useState([]) 
     const [currentMessage, setCurrentMessage] = useState('')
     const [novCh, setNovCh] = useState(0)
@@ -22,6 +22,7 @@ const GroupChatPage = ({ id_skupine, groupname }) => {
             text : currentMessage,
             posiljatelj : my_username,
         };
+        console.log(novGroupChat);
         await dodajGroupChat(novGroupChat);
         setCurrentMessage("");
         setNovCh(novCh+1)

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import Loading from './Loading';
 
 const ChatPage = ({ name, setChatLoading, setMsgLoading, chatLoading, msgLoading }) => {
-    const my_username = 'martin'
+    const my_username = sessionStorage.getItem("username");
 
     const [messages, setMessages] = useState([]) 
 
