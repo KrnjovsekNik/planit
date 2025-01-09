@@ -14,7 +14,7 @@ function MojeNaloge() {
 
   const [nalogeLoading, setNalogeLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
-  const my_username = 'martin'
+  const my_username = sessionStorage.getItem("username");
 
   const [stevilonalog, setSteviloNalog] = useState(0) //to je samo za to da se v realnem casu prikazuje nima veze z stevilom nalog
 
