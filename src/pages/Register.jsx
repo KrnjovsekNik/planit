@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { dodajUserja } from "../api/userApi";
+import CryptoJS from "crypto-js";
 
 export default function Register() {
   const [username, setIme] = useState("");
@@ -19,11 +20,10 @@ export default function Register() {
         password,
       };
 
-      console.log(novUporabnik);
-      // Klic API za dodajanje projekta
       if(password !== potrdiGeslo){
         alert("Gesla se ne ujemata!");
       }else{
+        novUporabnik.password = CryptoJS.SHA256(novUporabnik.password).toString(CryptoJS.enc.Base64);
         await dodajUserja(novUporabnik);
         window.location.href = "/login";
       }

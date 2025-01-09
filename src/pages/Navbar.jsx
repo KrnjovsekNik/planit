@@ -1,12 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CiLogout } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import { Odjava } from './Odjava';
 
 const Navbar = () => {
-  let ime = sessionStorage.getItem('username');
+  const [ime, setIme] = useState(sessionStorage.getItem('username'));
+  const [profileImage, setProfileImage] = useState(sessionStorage.getItem('profile_image'));
   const logoutHandler = Odjava();
+
+  // Update state when sessionStorage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIme(sessionStorage.getItem('username'));
+      setProfileImage(sessionStorage.getItem('profile_image'));
+    };
+
+    // Listen for changes to sessionStorage
+    window.addEventListener('storage', handleStorageChange);
+
+    // Cleanup listener on component unmount
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 right-0 z-40 bg-gray-100 text-white border-r border-gray-300">
@@ -24,7 +41,11 @@ const Navbar = () => {
             <div className="mr-2 font-medium text-sm">
               {ime}
             </div>
-            <FaRegUser />
+            <img
+              src={profileImage || 'default-profile-image-url.jpg'} // Fallback to default if no profile image
+              alt="Profile"
+              className="w-9 h-9 rounded-full shadow-md cursor-pointer"
+            />
           </Link>
           <button
             onClick={logoutHandler}
@@ -32,7 +53,7 @@ const Navbar = () => {
           >
             <CiLogout />
           </button>
-          </div>
+        </div>
       </div>
     </div>
   );

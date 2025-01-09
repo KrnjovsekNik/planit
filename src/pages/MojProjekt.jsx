@@ -8,7 +8,7 @@ import { MdOutlineDoneOutline, MdOutlinePending } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
 import DodajUserjeModal from "./DodajUserjeModal";
-import { pridobiUserja } from "../api/userApi";
+import { pridobiUserja, pridobiProfilnoSliko } from "../api/userApi";
 import { toast } from "react-toastify";
 import Loading from "./Loading";
 
@@ -42,6 +42,8 @@ function MojProjekt() {
 
     const [loading, setLoading] = useState(false)
     const [loading2, setLoading2] = useState(false)
+
+    const [userImages, setUserImages] = useState({});
 
 
     const fetchData = async () => {
@@ -113,6 +115,36 @@ function MojProjekt() {
       seznamPrijateljev()
     }, [projekt])
 
+    const fetchUserImages = async () => {
+      if (!projekt?.udelezenci) return;
+
+      const uniqueUsers = projekt.udelezenci;
+      const images = {};
+
+      for (const user of uniqueUsers) {
+          try {
+              const data = await pridobiProfilnoSliko(user);
+              if (data.success && data.image) {
+                  images[user] = data.image; // Store user profile image URL
+              } else {
+                  images[user] = "http://localhost:3000/images/default.jpg"; // Fallback image
+              }
+          } catch (error) {
+              console.error(`Error fetching profile image for ${user}:`, error);
+              images[user] = "http://localhost:3000/images/default.jpg"; // Fallback in case of error
+          }
+      }
+
+      setUserImages(images);
+  };
+
+  useEffect(() => {
+    if (projekt) {
+        setUdel(projekt.udelezenci || []);
+        fetchUserImages(); // Fetch images after project details are loaded
+    }
+}, [projekt]);
+
     const dodaj_k_projektu = async () => {
         try {
             const uspešnoDodani = await Promise.all(
@@ -160,7 +192,7 @@ function MojProjekt() {
                                     <div key={index} className="flex items-center space-x-2">
                                         <img
                                             className="w-[38px] h-[38px] rounded-full border-2 border-blue-500"
-                                            src="http://localhost:3000/images/demo.jpg"
+                                            src={userImages[udelezenec]}
                                             alt={udelezenec}
                                         />
                                         <span className="text-gray-800">{udelezenec}</span>

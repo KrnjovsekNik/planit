@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { pridobiPrijavo } from "../api/userApi"; // Uvoz API funkcije za dodajanje projektov
+import { pridobiPrijavo, pridobiProfilnoSliko } from "../api/userApi"; 
 import { toast } from "react-toastify";
+import CryptoJS from "crypto-js";
 
 export default function Login() {
   const [username, setIme] = useState("");
@@ -9,22 +10,29 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Priprava podatkov
       const Uporabnik = {
         username,
         password,
       };
-      // Klic API za preverjanje prijave
+      Uporabnik.password = CryptoJS.SHA256(Uporabnik.password).toString(CryptoJS.enc.Base64);
+      console.log(Uporabnik.password);
       const data = await pridobiPrijavo(Uporabnik);
+
       if(data.success == true)
       {
+        const profileImageResult = await pridobiProfilnoSliko(Uporabnik.username);
+        if (profileImageResult.success) {
+          sessionStorage.setItem('profile_image', profileImageResult.image);
+        } else {
+          console.log("No profile image found for user:", Uporabnik.username);
+        }
+
         toast.info(data.message);
         window.location.href = "/home";
       }if(data.success == false){
         toast.error(data.message);
       }
 
-      // Po uspešnem dodajanju počisti polja in zapri modalno okno
       setIme("");
       setGeslo("");
     } catch (err) {

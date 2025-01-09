@@ -20,6 +20,7 @@ export const pridobiUserja = async (username) => {
 export const pridobiPrijavo = async (user) => {
   try{
     const response = await axios.post(API_URL + "/login", user);
+    console.log(user.password);
     if(response.data.success){
       sessionStorage.setItem('username', response.data.username);
       sessionStorage.setItem('_id', response.data._id);
@@ -57,4 +58,59 @@ export const dodajPrijatelja = async (username, friend) => {
   }
 };
 
+export const posodobiProfilnoSliko = async (username, image) => {
+  try {
+    const response = await axios.post(API_URL + "/setprofileimage", {
+      username,
+      image,
+    });
+
+    if (response.data.success) {
+      return {
+        success: true,
+        message: response.data.message || "Profilna slika uspešno posodobljena.",
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message || "Napaka pri posodabljanju profilne slike.",
+      };
+    }
+  } catch (error) {
+    console.error("Napaka pri posodabljanju profilne slike:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data?.message || "Napaka pri posodabljanju profilne slike.",
+    };
+  }
+};
+
+// Pridobi profilno sliko
+export const pridobiProfilnoSliko = async (username) => {
+  try {
+    const response = await axios.post(API_URL + "/getprofileimage", {
+      username,
+    });
+
+    if (response.data.success) {
+      // Shrani profilno sliko v sessionStorage
+      sessionStorage.setItem('profile_image', response.data.image);
+      return {
+        success: true,
+        image: response.data.image,
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message || "Profilna slika ni najdena.",
+      };
+    }
+  } catch (error) {
+    console.error("Napaka pri pridobivanju profilne slike:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data?.message || "Napaka pri pridobivanju profilne slike.",
+    };
+  }
+};
 

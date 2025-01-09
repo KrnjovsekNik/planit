@@ -3,6 +3,7 @@ import { pridobiFriendChat, dodajFriendChat } from '../api/friendChatApi';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import Loading from './Loading';
+import { pridobiProfilnoSliko } from '../api/userApi';
 
 const ChatPage = ({ name, setChatLoading, setMsgLoading, chatLoading, msgLoading }) => {
     const my_username = sessionStorage.getItem("username");
@@ -12,6 +13,8 @@ const ChatPage = ({ name, setChatLoading, setMsgLoading, chatLoading, msgLoading
     const [currentMessage, setCurrentMessage] = useState('')
 
     const [sprememba, setSprememba] = useState(0)
+
+    const [userImages, setUserImages] = useState({});
 
   const handleMessage = async (e) => {
     e.preventDefault();
@@ -61,6 +64,32 @@ const ChatPage = ({ name, setChatLoading, setMsgLoading, chatLoading, msgLoading
         }
     }, [messages]);
 
+    useEffect(() => {
+            const fetchUserImages = async () => {
+              const uniqueUsers = [...new Set(messages.map((msg) => msg.posiljatelj))];
+              const images = {};
+          
+              for (const user of uniqueUsers) {
+                try {
+                  const data = await pridobiProfilnoSliko(user);
+                  if (data.success && data.image) {
+                    images[user] = data.image;
+                  } else {
+                    images[user] = "http://localhost:3000/images/default.jpg";
+                  }
+                } catch (error) {
+                  console.error(`Error fetching profile image for ${user}:`, error);
+                  images[user] = "http://localhost:3000/images/default.jpg";
+                }
+              }
+          
+              setUserImages(images);
+            };
+          
+            fetchUserImages();
+          }, [messages]);
+
+
     return (
         <div className="flex flex-col h-full">
 
@@ -85,7 +114,7 @@ const ChatPage = ({ name, setChatLoading, setMsgLoading, chatLoading, msgLoading
                             {msg.posiljatelj !== my_username && (
                                 <img
                                     className="w-[38px] h-[38px] rounded-full border-2 border-blue-500"
-                                    src="http://localhost:3000/images/demo.jpg"
+                                    src={userImages[msg.posiljatelj]}
                                     alt={msg.posiljatelj}
                                 />
                             )}
@@ -104,7 +133,7 @@ const ChatPage = ({ name, setChatLoading, setMsgLoading, chatLoading, msgLoading
                             {msg.posiljatelj === my_username && (
                                 <img
                                     className="w-[38px] h-[38px] rounded-full border-2 border-blue-500"
-                                    src="http://localhost:3000/images/demo.jpg"
+                                    src={userImages[msg.posiljatelj]}
                                     alt={msg.posiljatelj}
                                 />
                             )}
