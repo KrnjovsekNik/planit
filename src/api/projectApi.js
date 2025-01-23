@@ -24,3 +24,13 @@ export const dodajVprojekt = async (ime, id) => {
   const response = await axios.put(`${API_URL}/dodaj/${ime}/${id}`);
   return response.data;
 };
+
+export const pridobiProjektIdPoImenu = async (ime) => {
+  try {
+    const response = await axios.get(`${API_URL}/dobiIdPoImenu/${ime}`);
+    return response.data;
+  } catch (error) {
+    console.error("Napaka pri pridobivanju ID-ja projekta", error);
+    throw error;
+  }
+};

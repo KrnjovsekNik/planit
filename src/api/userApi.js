@@ -2,13 +2,11 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/users';
 
-// Dodaj projekt
 export const dodajUserja = async (user) => {
   const response = await axios.post(API_URL + "/register", user);
   return response.data;
 };
 
-// Pridobi uporabnika
 export const pridobiUserja = async (username) => {
   const params = {username: username};
   const response = await axios.post(API_URL + "/getuser", params);
@@ -56,6 +54,15 @@ export const dodajPrijatelja = async (username, friend) => {
   }
 };
 
+export const pridobiUporabnike = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/users/all`);
+    return response.data;
+  } catch (error) {
+    console.error('Napaka pri pridobivanju uporabnikov:', error);
+    throw error;
+  }
+};
 export const posodobiProfilnoSliko = async (username, image) => {
   try {
     const response = await axios.post(API_URL + "/setprofileimage", {
