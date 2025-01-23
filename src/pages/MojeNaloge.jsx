@@ -129,7 +129,7 @@ function MojeNaloge() {
       <div className={`grid grid-cols-3 gap-4 p-4 bg-white flex ${nalogeLoading ? 'flex items-center justify-center h-[100px] w-[270%]' : ''}`}>
                 { nalogeLoading ? <Loading /> : 
                     (naloge && naloge.map((naloga, index) => ( 
-                        <div key={index} class={`bg-white w-[80%] my-[10px] rounded-lg shadow-md p-4 border border-gray-300 hover:shadow-lg transition-all duration-200 ${(filter !== 'vsi' && filter !== naloga.stanje) ? 'hidden' : ''}`}>
+                        <div key={index} className={`bg-white w-[80%] my-[10px] rounded-lg shadow-md p-4 border border-gray-300 hover:shadow-lg transition-all duration-200 ${(filter !== 'vsi' && filter !== naloga.stanje) ? 'hidden' : ''}`}>
                         <h3 className="text-lg font-semibold text-gray-800">{naloga.ime}</h3>
                         <p className="text-gray-600 mt-2 line-clamp-2">
                           {naloga.lastnik}

@@ -3,41 +3,45 @@ import imageCompression from 'browser-image-compression';
 import { posodobiProfilnoSliko } from '../api/userApi';
 
 export default function Profile() {
-  const [name, setName] = useState(sessionStorage.getItem('username'));
-  const [email] = useState("martin.kobal@gmail.com");
-  const [password, setPassword] = useState("123456");
-  const [isEditing, setIsEditing] = useState(false);
+  const [name] = useState(sessionStorage.getItem('username'));
+  const [email] = useState(sessionStorage.getItem('email'));
   const [profileImage, setProfileImage] = useState(sessionStorage.getItem('profile_image'));
+  const [isEditing, setIsEditing] = useState(false);
 
+  //funkcija za spreminjanje slike
   const handleImageUpload = async (event) => {
+    //tukaj se odpre okno za izbiro datoteke
     const file = event.target.files[0];
     if (!file) return;
-  
+
     try {
       const options = {
         maxWidthOrHeight: 100,
         useWebWorker: true,
       };
+      //tukaj kompresiramo sliko na 100x100 pikslov da jo zmanjsamo
       const compressedFile = await imageCompression(file, options);
-  
+
+      //tukaj formatiramo sliko, zato da jo lahko pošljemo na cloud imgbb
       const formData = new FormData();
       formData.append("image", compressedFile);
-  
-      const response = await fetch("https://api.imgbb.com/1/upload?key=0d6f327be83ef1c4f9fc93dbb8990b68", {
+      //izvedemo klic na imgbb
+      const response = await fetch("https://api.imgbb.com/1/upload?key=06f327be83ef1c4f9fc93dbb8990b68", {
         method: "POST",
         body: formData,
       });
-  
+      //imgbb nam vrne link do shranjene slike.
       const data = await response.json();
       if (data.success) {
         const uploadedImageUrl = data.data.url;
-  
+
         const username = sessionStorage.getItem('username');
+        //posodobimo profilno sliko na nasi bazi
         const apiResponse = await posodobiProfilnoSliko(username, uploadedImageUrl);
-  
+
         if (apiResponse.success) {
           sessionStorage.setItem('profile_image', uploadedImageUrl);
-  
+          //ce to uspe se nastavimo profilno sliko v seji
           setProfileImage(uploadedImageUrl);
           alert("Image successfully uploaded and saved!");
         } else {
@@ -54,13 +58,15 @@ export default function Profile() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 shadow-lg rounded-md w-full max-w-md">
-        <div className="flex items-center mb-6">
-          <div className="relative">
+      <div className="bg-white p-10 shadow-lg rounded-lg w-full max-w-2xl">
+        <div className="flex items-center mb-8">
+          <div className="relative group">
             <img
               src={profileImage || "https://via.placeholder.com/100"}
               alt="Profile"
-              className="w-20 h-20 rounded-full shadow-md cursor-pointer"
+              className={`w-28 h-28 rounded-full shadow-md cursor-pointer transition-transform duration-300 ${
+                isEditing ? "group-hover:scale-110 group-hover:shadow-lg" : ""
+              }`}
               onClick={() => isEditing && document.getElementById("imageUpload").click()}
             />
             {isEditing && (
@@ -73,51 +79,32 @@ export default function Profile() {
               />
             )}
           </div>
-          <div className="ml-4">
-            <p className="text-sm font-medium text-gray-500">Uporabniško ime</p>
-            {isEditing ? (
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-              />
-            ) : (
+          <div className="ml-6 flex-grow">
+            <div className="bg-gray-100 p-3 rounded-md shadow-sm">
+              <p className="text-sm font-medium text-gray-500">Uporabniško ime</p>
               <p className="text-lg font-bold text-gray-800">{name}</p>
-            )}
+            </div>
           </div>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 bg-gray-100 p-3 rounded-md shadow-sm">
           <p className="text-sm font-medium text-gray-500">Uporabniški e-naslov</p>
           <p className="text-lg text-gray-800">{email}</p>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 bg-gray-100 p-3 rounded-md shadow-sm">
           <p className="text-sm font-medium text-gray-500">Geslo</p>
-          {isEditing ? (
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-            />
-          ) : (
-            <p className="text-lg text-gray-800">******</p>
-          )}
+          <p className="text-lg text-gray-800">******</p>
         </div>
 
-        <button
-          onClick={() => {
-            if (isEditing) {
-              alert("Podatki spremenjeni!");
-            }
-            setIsEditing(!isEditing);
-          }}
-          className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition"
-        >
-          {isEditing ? "Shrani" : "Spremeni"}
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={() => setIsEditing(!isEditing)}
+            className="bg-indigo-500 text-white py-2 px-6 rounded-md hover:bg-indigo-600 transition"
+          >
+            {isEditing ? "Shrani" : "Spremeni"}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -10,10 +10,8 @@ export const dodajUserja = async (user) => {
 
 // Pridobi uporabnika
 export const pridobiUserja = async (username) => {
-  //console.log(username);
   const params = {username: username};
   const response = await axios.post(API_URL + "/getuser", params);
-  //console.log(response.data);
   return response.data;
 };
 
@@ -64,7 +62,6 @@ export const posodobiProfilnoSliko = async (username, image) => {
       username,
       image,
     });
-
     if (response.data.success) {
       return {
         success: true,
@@ -85,7 +82,6 @@ export const posodobiProfilnoSliko = async (username, image) => {
   }
 };
 
-// Pridobi profilno sliko
 export const pridobiProfilnoSliko = async (username) => {
   try {
     const response = await axios.post(API_URL + "/getprofileimage", {
@@ -93,7 +89,6 @@ export const pridobiProfilnoSliko = async (username) => {
     });
 
     if (response.data.success) {
-      // Shrani profilno sliko v sessionStorage
       sessionStorage.setItem('profile_image', response.data.image);
       return {
         success: true,

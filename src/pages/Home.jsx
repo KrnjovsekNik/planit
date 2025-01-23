@@ -7,6 +7,8 @@ import Naloge from "./MojeNaloge";
 import Projekti from "./MojiProjekti";
 import Koledar from "./Koledar";
 
+
+console.log(sessionStorage.getItem("email"));
 function Homepage() {
   const navigate = useNavigate();
   const [projektiDelezi, setProjektiDelezi] = useState([]);

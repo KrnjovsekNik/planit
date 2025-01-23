@@ -27,7 +27,6 @@ const Prijatelji = () => {
         try {
           setPriateljiLoading(true)
           const data = await pridobiUserja(name);
-          console.log(data);
           setUser(data);
           setPrijatelji(data[0].prijatelji);
         } catch (error) {

@@ -3,6 +3,7 @@ import { dodajUserja } from "../api/userApi";
 import CryptoJS from "crypto-js";
 
 export default function Register() {
+  //spremenljivke
   const [username, setIme] = useState("");
   const [email, setEmail] = useState("");
   const [password, setGeslo] = useState("");
@@ -12,6 +13,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      //forma za novega uporabnika
       const novUporabnik = {
         username,
         email,
@@ -22,8 +24,11 @@ export default function Register() {
       if(password !== potrdiGeslo){
         alert("Gesla se ne ujemata!");
       }else{
+        //tukaj hashamo geslo, zato da se ne shrani dobesedno na bazi
         novUporabnik.password = CryptoJS.SHA256(novUporabnik.password).toString(CryptoJS.enc.Base64);
+        //klic funkcije za registracijo
         await dodajUserja(novUporabnik);
+        //preusmeritev na prijavo
         window.location.href = "/login";
       }
 
@@ -37,8 +42,10 @@ export default function Register() {
   };
 
   return (
+    //html za aplikacijo
     <div className="flex w-screen items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 shadow-lg rounded-md w-96">
+      <h3 className="text-sm text-center text-gray-600">Planit</h3>
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Registracija</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
