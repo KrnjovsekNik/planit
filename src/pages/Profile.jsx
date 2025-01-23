@@ -26,7 +26,7 @@ export default function Profile() {
       const formData = new FormData();
       formData.append("image", compressedFile);
       //izvedemo klic na imgbb
-      const response = await fetch("https://api.imgbb.com/1/upload?key=06f327be83ef1c4f9fc93dbb8990b68", {
+      const response = await fetch("https://api.imgbb.com/1/upload?key=0d6f327be83ef1c4f9fc93dbb8990b68", {
         method: "POST",
         body: formData,
       });
