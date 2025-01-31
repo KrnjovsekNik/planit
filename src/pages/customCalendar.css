@@ -1,14 +1,12 @@
 .calendar-wrapper {
     display: flex;
     justify-content: center;
-    padding: 20px;
+    width: 100%;
   }
   
   .calendar-container {
     width: 100%;
-    max-width: 1200px;
     background-color: white;
-    border-radius: 16px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1),
                 0 15px 40px rgba(0, 0, 0, 0.08);
     padding: 20px;
@@ -16,7 +14,7 @@
   }
   
   .custom-big-calendar {
-    height: 500px;
+    height: 657px;
     background-color: white;
   }
   
