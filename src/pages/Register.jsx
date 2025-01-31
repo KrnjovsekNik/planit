@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { dodajUserja } from "../api/userApi";
+import CryptoJS from "crypto-js";
 
 export default function Register() {
+  //spremenljivke
   const [username, setIme] = useState("");
   const [email, setEmail] = useState("");
   const [password, setGeslo] = useState("");
@@ -11,7 +13,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Priprava podatkov
+      //forma za novega uporabnika
       const novUporabnik = {
         username,
         email,
@@ -19,16 +21,17 @@ export default function Register() {
         password,
       };
 
-      console.log(novUporabnik);
-      // Klic API za dodajanje projekta
       if(password !== potrdiGeslo){
         alert("Gesla se ne ujemata!");
       }else{
+        //tukaj hashamo geslo, zato da se ne shrani dobesedno na bazi
+        novUporabnik.password = CryptoJS.SHA256(novUporabnik.password).toString(CryptoJS.enc.Base64);
+        //klic funkcije za registracijo
         await dodajUserja(novUporabnik);
+        //preusmeritev na prijavo
         window.location.href = "/login";
       }
 
-      // Po uspešnem dodajanju počisti polja in zapri modalno okno
       setIme("");
       setEmail("");
       setGeslo("");
@@ -39,12 +42,12 @@ export default function Register() {
   };
 
   return (
+    //html za aplikacijo
     <div className="flex w-screen items-center justify-center min-h-screen bg-gray-100">
-      {/* registracija */}
       <div className="bg-white p-8 shadow-lg rounded-md w-96">
+      <h3 className="text-sm text-center text-gray-600">Planit</h3>
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Registracija</h2>
         <form onSubmit={handleSubmit}>
-          {/* vnos za ime */}
           <div className="mb-4">
             <label
               htmlFor="username"
@@ -60,7 +63,6 @@ export default function Register() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-          {/* vnos za mejl */}
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -76,7 +78,6 @@ export default function Register() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-          {/* vnos za geslo */}
           <div className="mb-4">
             <label
               htmlFor="password"
@@ -92,7 +93,6 @@ export default function Register() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-          {/* potrditev za geslo */}
           <div className="mb-4">
             <label
               htmlFor="confirmPassword"
@@ -108,7 +108,6 @@ export default function Register() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-          {/* gumb za registracijo */}
           <button
             type="submit"
             className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition"
@@ -116,7 +115,6 @@ export default function Register() {
             Registracija
           </button>
         </form>
-        {/* link do prijave */}
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-600">
             Že imate račun?{' '}

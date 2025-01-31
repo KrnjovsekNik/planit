@@ -3,6 +3,7 @@ import { pridobiGroupChat, dodajGroupChat } from '../api/groupChatApi';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import Loading from './Loading';
+import { pridobiProfilnoSliko } from '../api/userApi';
 
 const GroupChatPage = ({ id_skupine, groupname }) => {
 
@@ -12,6 +13,7 @@ const GroupChatPage = ({ id_skupine, groupname }) => {
     const [novCh, setNovCh] = useState(0)
     const [loading, setLoading] = useState(false)
     const [msgLoading, setMsgLoading] = useState(false)
+    const [userImages, setUserImages] = useState({});
 
     const handleMessage = async (e) => {
         e.preventDefault();
@@ -22,7 +24,7 @@ const GroupChatPage = ({ id_skupine, groupname }) => {
             text : currentMessage,
             posiljatelj : my_username,
         };
-        console.log(novGroupChat);
+        //console.log(novGroupChat);
         await dodajGroupChat(novGroupChat);
         setCurrentMessage("");
         setNovCh(novCh+1)
@@ -58,6 +60,31 @@ const GroupChatPage = ({ id_skupine, groupname }) => {
         }
     }, [messages]);
 
+    useEffect(() => {
+        const fetchUserImages = async () => {
+          const uniqueUsers = [...new Set(messages.map((msg) => msg.posiljatelj))];
+          const images = {};
+      
+          for (const user of uniqueUsers) {
+            try {
+              const data = await pridobiProfilnoSliko(user);
+              if (data.success && data.image) {
+                images[user] = data.image;
+              } else {
+                images[user] = "http://localhost:3000/images/default.jpg";
+              }
+            } catch (error) {
+              console.error(`Error fetching profile image for ${user}:`, error);
+              images[user] = "http://localhost:3000/images/default.jpg";
+            }
+          }
+      
+          setUserImages(images);
+        };
+      
+        fetchUserImages();
+      }, [messages]);
+
     return (
         <div className="flex flex-col h-full">
 
@@ -81,7 +108,7 @@ const GroupChatPage = ({ id_skupine, groupname }) => {
                             {msg.posiljatelj !== my_username && (
                                 <img
                                     className="w-[38px] h-[38px] rounded-full border-1 border-blue-400"
-                                    src="http://localhost:3000/images/demo.jpg"
+                                    src={userImages[msg.posiljatelj]}
                                     alt={msg.posiljatelj}
                                 />
                             )}
@@ -98,7 +125,7 @@ const GroupChatPage = ({ id_skupine, groupname }) => {
                             {msg.posiljatelj === my_username && (
                                 <img
                                     className="w-[38px] h-[38px] rounded-full border-2 border-blue-500"
-                                    src="http://localhost:3000/images/demo.jpg"
+                                    src={userImages[msg.posiljatelj]}
                                     alt={msg.posiljatelj}
                                 />
                             )}

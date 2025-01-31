@@ -3,6 +3,7 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/naloge';
 
 // dodaj nalogo
+
 export const dodajNalogo = async (naloga) => {
   const response = await axios.post(API_URL, naloga);
   return response.data;

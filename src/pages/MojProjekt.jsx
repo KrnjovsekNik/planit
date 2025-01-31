@@ -8,13 +8,16 @@ import { MdOutlineDoneOutline, MdOutlinePending } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
 import DodajUserjeModal from "./DodajUserjeModal";
-import { pridobiUserja } from "../api/userApi";
+import { pridobiUserja, pridobiProfilnoSliko } from "../api/userApi";
 import { toast } from "react-toastify";
 import Loading from "./Loading";
+import DodajNalogoModal from "./DodajNalogoModal"; 
+import { dodajNalogo } from "../api/nalogeApi";
 
 function MojProjekt() {
     const username = sessionStorage.getItem("username");
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalNalogaOpen, setModalNalogaOpen] = useState(false);
     const [dodanoP, setDodanoP] = useState(0)
 
     const [udel, setUdel] = useState([])
@@ -24,6 +27,36 @@ function MojProjekt() {
         setDodanoP(dodanoP + 1)
     }
 
+    const [taskAdded, setTaskAdded] = useState(0);
+
+    const handleAddTask = async (ime, opis, rok, id_projekt, ime_projekta) => {
+      try {
+        const lastnik = sessionStorage.getItem('username');
+    
+        const naloga = {
+          ime,
+          opis,
+          rok,
+          stanje: 'nedokončano',
+          lastnik,
+          id_projekt,
+          ime_projekta,
+        };
+    
+        await dodajNalogo(naloga);
+    
+        toast.success("Naloga uspešno dodana!");
+        setModalNalogaOpen(false);
+
+        await fetchData();
+        await fetchData2();
+      
+      } catch (error) {
+        toast.error(`Napaka pri dodajanju naloge: ${error.message}`);
+        console.error("Napaka pri dodajanju naloge:", error);
+      }
+    };
+    
     const [prijatelji, setPrijatelji] = useState(null)
     
 
@@ -43,6 +76,8 @@ function MojProjekt() {
     const [loading, setLoading] = useState(false)
     const [loading2, setLoading2] = useState(false)
 
+    const [userImages, setUserImages] = useState({});
+
 
     const fetchData = async () => {
         setLoading(true)
@@ -57,17 +92,18 @@ function MojProjekt() {
     };
 
     const fetchData2 = async () => {
-        setLoading2(true)
-        try {
-            const response = await pridobiProjektneNaloge(id)
-            setNaloge(response);
-            setNalozilo(nalozilo+1)
-        } catch (error) {
-            toast.error('Napaka pri pridobivanju projektnih nalog');
-        } finally {
-          setLoading2(false)
-        }
-    };
+      setLoading2(true);
+      try {
+          const response = await pridobiProjektneNaloge(id);
+          console.log('Posodobljene naloge:', response); 
+          setNaloge(response); 
+          setNalozilo(nalozilo + 1); 
+      } catch (error) {
+          toast.error('Napaka pri pridobivanju projektnih nalog');
+      } finally {
+          setLoading2(false);
+      }
+  };
     useEffect(() => {
         fetchData();
     }, []);
@@ -112,6 +148,36 @@ function MojProjekt() {
     useEffect(() => {
       seznamPrijateljev()
     }, [projekt])
+
+    const fetchUserImages = async () => {
+      if (!projekt?.udelezenci) return;
+
+      const uniqueUsers = projekt.udelezenci;
+      const images = {};
+
+      for (const user of uniqueUsers) {
+          try {
+              const data = await pridobiProfilnoSliko(user);
+              if (data.success && data.image) {
+                  images[user] = data.image; // Store user profile image URL
+              } else {
+                  images[user] = "http://localhost:3000/images/default.jpg"; // Fallback image
+              }
+          } catch (error) {
+              console.error(`Error fetching profile image for ${user}:`, error);
+              images[user] = "http://localhost:3000/images/default.jpg"; // Fallback in case of error
+          }
+      }
+
+      setUserImages(images);
+  };
+
+  useEffect(() => {
+    if (projekt) {
+        setUdel(projekt.udelezenci || []);
+        fetchUserImages(); // Fetch images after project details are loaded
+    }
+}, [projekt]);
 
     const dodaj_k_projektu = async () => {
         try {
@@ -160,7 +226,7 @@ function MojProjekt() {
                                     <div key={index} className="flex items-center space-x-2">
                                         <img
                                             className="w-[38px] h-[38px] rounded-full border-2 border-blue-500"
-                                            src="http://localhost:3000/images/demo.jpg"
+                                            src={userImages[udelezenec]}
                                             alt={udelezenec}
                                         />
                                         <span className="text-gray-800">{udelezenec}</span>
@@ -178,10 +244,24 @@ function MojProjekt() {
             </div>
 
             <div className='w-[100%] flex justify-end p-[5px]'>
-                <button className="flex items-center space-x-2 px-4 bg-white border border-gray-500 hover:bg-gray-200 text-gray-700 rounded-md shadow-sm">
+                {/* Gumb za dodajanje naloge */}
+            <div className='w-[100%] flex justify-end p-[5px]'>
+                <button
+                    onClick={() => setModalNalogaOpen(true)}  
+                    className="flex items-center space-x-2 px-4 bg-white border border-gray-500 hover:bg-gray-200 text-gray-700 rounded-md shadow-sm"
+                >
                     <FiPlus className="text-lg" />
                     <span>Nova naloga</span>
                 </button>
+            </div>
+
+            {/* Modal za dodajanje naloge */}
+            <DodajNalogoModal 
+              isOpen={modalNalogaOpen}
+              onClose={() => setModalNalogaOpen(false)}
+              onAddTask={handleAddTask}
+              projekt={projekt} 
+          />
             </div>
 
             <div className="grid grid-cols-3 px-[20px]">
